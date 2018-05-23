@@ -53,6 +53,7 @@ public class UserBean {
 	private DataModel listaNoticias;
 	private DataModel listaEstadios;
 	private int intentos;
+	
 	private String contrasenaAnterior;
 	private String contrasenaNueva;
 	private String contrasenaNuevaRep;
