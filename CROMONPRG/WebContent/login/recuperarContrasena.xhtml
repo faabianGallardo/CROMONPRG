@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>LOGIN</title>
+</h:head>
+<h:body style="background-color: mintcream">
+	<center>
+		<h:form>
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<p:graphicImage url="/img/contraseña.png" />
+			<br />
+			<br />
+			<br />
+
+
+
+			<p:panelGrid id="panel" columns="2" style="text-align:center; ">
+				<p:outputLabel for="email" value="Ingrese su correo:" />
+				<p:inputText id="email" value="#{userBean.usuario.emailAddress}" />
+
+			</p:panelGrid>
+			<br />
+
+			<p:commandButton value="Enviar"
+				action="#{userBean.recuperarContrasena}" update="panel" />
+			<br />
+			<br />
+			<p:outputLabel value="¿No tiene cuenta? ">
+				<p:commandLink action="#{userBean.prepararAdicionarUsuario}"
+					value="Crear cuenta." />
+			</p:outputLabel>
+			<br />
+			<br />
+			<p:commandLink action="login" value="Regresar." />
+		</h:form>
+	</center>
+</h:body>
+</html>

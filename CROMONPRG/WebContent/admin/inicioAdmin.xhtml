@@ -1,0 +1,272 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:head>
+	<title>Inicio Administrador</title>
+</h:head>
+<h:body>
+
+	<h:form>
+		<center>
+			<p:panelGrid columns="3" layout="grid">
+				<p:outputLabel />
+				<p:outputLabel />
+				<p:outputLabel />
+				<p:outputLabel style="text-aligne:center;">
+					<p:graphicImage url="/img/cromon.png" width="247" height="70.5" />
+				</p:outputLabel>
+				<p:outputLabel style="text-aligne:center;">
+					<p:graphicImage url="/img/usuario.png" height="71"
+						style="align:center" />
+				</p:outputLabel>
+				<p:outputLabel>
+					<p:commandButton value="Salir" action="#{userBean.cerrarSesion}"
+						icon="ui-icon-extlink" />
+				</p:outputLabel>
+				<p:outputLabel />
+				<p:outputLabel style="text-aligne:center;">ADMINISTRADOR</p:outputLabel>
+				<p:outputLabel />
+			</p:panelGrid>
+
+		</center>
+		<center>
+			<p:tabView>
+				<p:tab title="USUARIOS">
+					<h:commandLink action="#{userBean.exportarUserPDF}">
+						<p:graphicImage url="/img/pdf.png" width="32" />
+					</h:commandLink>
+					<p:dataTable id="users" var="user"
+						value="#{userBean.listarUsuarios}" paginator="true" rows="6"
+						style="margin-bottom:20px">
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<h:outputText value="#{user.id}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Usuario" />
+							</f:facet>
+							<h:outputText value="#{user.userName}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Dirección IP" />
+							</f:facet>
+							<h:outputText value="#{user.ipAddress}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Nombre" />
+							</f:facet>
+							<h:outputText value="#{user.fullName}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Teléfono" />
+							</f:facet>
+							<h:outputText value="#{user.phoneNumber}" />
+						</p:column>
+
+						<p:column width="200">
+							<f:facet name="header">
+								<h:outputText value="Correo" />
+							</f:facet>
+							<h:outputText value="#{user.emailAddress}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Estado" />
+							</f:facet>
+							<h:outputText value="Activo" rendered="#{'A' eq user.active}" />
+							<h:outputText value="InActivo" rendered="#{'I' eq user.active}" />
+						</p:column>
+
+						<p:column width="75">
+							<f:facet name="header">
+								<h:outputText value="Modificar" />
+							</f:facet>
+
+							<h:commandButton image="/img/deshabilitar.png"
+								action="#{userBean.eliminarUsuario}" />
+							<p:outputLabel />
+							<h:commandButton image="/img/habilitar.png"
+								action="#{userBean.habilitarUsuario}" />
+
+						</p:column>
+
+
+					</p:dataTable>
+
+				</p:tab>
+				<p:tab title="AUDITORIA">
+					<h:commandLink action="#{userBean.exportarAuditPDF}">
+						<p:graphicImage url="/img/pdf.png" width="32" />
+					</h:commandLink>
+					<p:dataTable id="auditoria" var="audit"
+						value="#{auditBean.listarAuditoria}"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+						paginator="true" rows="9" style="margin-bottom:20px">
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<h:outputText value="#{audit.id}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="User ID" />
+							</f:facet>
+							<h:outputText value="#{audit.userId}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Operation" />
+							</f:facet>
+							<h:outputText value="#{audit.operation}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Table Name" />
+							</f:facet>
+							<h:outputText value="#{audit.tableName}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Table ID" />
+							</f:facet>
+							<h:outputText value="#{audit.tableId}" />
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Create Date" />
+							</f:facet>
+							<h:outputText value="#{audit.createDate}" />
+						</p:column>
+					</p:dataTable>
+				</p:tab>
+				<p:tab title="NOTICIAS">
+					<p:tabView>
+						<p:tab title="Noticias">
+							<center>
+								<p:scrollPanel mode="native">
+									<p:dataScroller id="new" var="noticia"
+										value="#{newBean.listarNoticias}" chunkSize="20">
+										<h:panelGrid columns="2" style="width:100%"
+											columnClasses="logo,detail">
+											<p:graphicImage url="/img/news.png" width="150" height="150" />
+											<p:outputPanel>
+												<h:panelGrid columns="2" cellpadding="5">
+													<h:outputText value="Título: " />
+													<h:outputText value="#{noticia.shortDescription}"
+														style="font-weight: bold" />
+
+													<h:outputText value="Cuerpo: " />
+													<h:outputText value="#{noticia.largeDescription}"
+														style="font-weight: bold" />
+
+													<h:outputText value="Fecha publicación: " />
+													<h:outputText value="#{noticia.dateNews}"
+														style="font-weight: bold" />
+												</h:panelGrid>
+											</p:outputPanel>
+										</h:panelGrid>
+									</p:dataScroller>
+								</p:scrollPanel>
+							</center>
+						</p:tab>
+						<p:tab title="Agregar">
+							<p:panelGrid columns="2" layout="grid">
+								<f:facet name="header">
+									<h:outputText value="Agregar nueva noticia" />
+								</f:facet>
+								<p:outputLabel value="Descripción corta:" />
+								<p:inputText value="#{newBean.noticia.shortDescription}"
+									maxlength="60" />
+								<p:outputLabel value="Descripción larga:" />
+								<p:inputTextarea value="#{newBean.noticia.largeDescription}"
+									rows="5" cols="23" counter="display" maxlength="120"
+									counterTemplate="{0} caracteres restantes." />
+								<p:outputLabel />
+								<h:outputText id="display" />
+							</p:panelGrid>
+							<br />
+							<p:commandButton value="Guardar" action="#{newBean.nuevaNoticia}" />
+							<br />
+						</p:tab>
+					</p:tabView>
+
+				</p:tab>
+				<p:tab title="AJUSTES">
+					<p:tabView>
+						<p:tab title="Mis Datos">
+							<p:panelGrid columns="2">
+								<f:facet name="header">
+									<h:outputText value="Cambio de datos" />
+								</f:facet>
+								<p:outputLabel value="Usuario:" />
+								<p:inputText id="user" value="#{userBean.usuario.userName}"
+									maxlength="8" />
+								<p:outputLabel value="Nombre:" />
+								<p:inputText id="name" value="#{userBean.usuario.fullName}"
+									maxlength="60" />
+								<p:outputLabel value="Teléfono:" />
+								<p:inputText id="numbre" value="#{userBean.usuario.phoneNumber}"
+									maxlength="10" />
+								<p:outputLabel value="Email:" />
+								<p:inputText id="email" value="#{userBean.usuario.emailAddress}"
+									maxlength="75" />
+							</p:panelGrid>
+							<br />
+							<p:commandButton value="Guardar"
+								action="#{userBean.actualizarDatos}" />
+							<br />
+						</p:tab>
+						<p:tab title="Ajustes de Contraseña">
+
+							<p:panelGrid columns="2">
+								<f:facet name="header">
+									<h:outputText value="Cambio de contraseña" />
+								</f:facet>
+								<p:outputLabel value="Contraseña anterior:" />
+								<p:password id="lastPassword"
+									value="#{userBean.contrasenaAnterior}" maxlength="256" />
+								<p:outputLabel value="Contraseña nueva:" />
+								<p:password id="newPassword" value="#{userBean.contrasenaNueva}"
+									maxlength="256" />
+
+								<p:outputLabel value="Repita la Contraseña:" />
+								<p:password id="rNewPassword"
+									value="#{userBean.contrasenaNuevaRep}" maxlength="256" />
+							</p:panelGrid>
+							<br />
+							<p:commandButton value="Guardar"
+								action="#{userBean.actualizarContrasena}" />
+							<br />
+							<h:inputHidden value="#{userBean.usuario.emailAddress}" />
+						</p:tab>
+					</p:tabView>
+				</p:tab>
+			</p:tabView>
+		</center>
+	</h:form>
+
+</h:body>
+</html>

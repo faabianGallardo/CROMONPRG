@@ -1,0 +1,231 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:head>
+	<title>Inicio Cromon</title>
+</h:head>
+<h:body>
+
+	<h:form id="form">
+		<center>
+			<p:panelGrid columns="3" layout="grid">
+				<p:outputLabel />
+				<p:outputLabel />
+				<p:outputLabel />
+				<p:outputLabel style="float:left">
+					<p:graphicImage url="/img/cromon.png" width="247" height="70.5" />
+				</p:outputLabel>
+				<p:outputLabel style="float:center">
+					<p:graphicImage url="/img/usuario.png" height="71"
+						style="align:center" />
+				</p:outputLabel>
+				<p:outputLabel>
+					<p:commandButton value="Salir" action="#{userBean.cerrarSesion}"
+						icon="ui-icon-extlink" style="float:right" />
+				</p:outputLabel>
+				<p:outputLabel />
+				<p:outputLabel value="Usuario" style="text-aligne:center;" />
+				<p:outputLabel />
+			</p:panelGrid>
+
+		</center>
+		<center>
+			<p:tabView>
+				<p:tab title="LAMINAS FALTANTES">
+
+					<div style="float: right">
+						<h:commandLink action="#{userBean.agregarFaltante}">
+							<p:graphicImage url="/img/add.png" width="32" />
+						</h:commandLink>
+					</div>
+					<p:dataTable id="faltante" var="faltantes"
+						value="#{userBean.listarFaltantes}" paginator="true" rows="10"
+						style="margin-bottom:20px">
+
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<center>
+								<h:outputText value="#{faltantes.id}" />
+							</center>
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="UserID" />
+							</f:facet>
+							<center>
+								<h:outputText value="#{faltantes.userId}" />
+							</center>
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Número de lámina" />
+							</f:facet>
+							<center>
+								<h:outputText value="#{faltantes.numberSheets}" />
+							</center>
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Cantidad" />
+							</f:facet>
+							<center>
+								<h:outputText value="#{faltantes.countSheets}" />
+							</center>
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+				<p:tab title="LAMINAS REPETIDAS">
+					<div style="float: right">
+						<h:commandLink action="#{userBean.agregarRepetida}">
+							<p:graphicImage url="/img/add.png" width="32" />
+						</h:commandLink>
+					</div>
+					<p:dataTable id="repetida" var="repetidas"
+						value="#{userBean.listarRepetidas}" paginator="true" rows="10"
+						style="margin-bottom:20px">
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Id" />
+							</f:facet>
+							<center>
+								<h:outputText value="#{repetidas.id}" />
+							</center>
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="UserID" />
+							</f:facet>
+							<center>
+								<h:outputText value="#{repetidas.userId}" />
+							</center>
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Número de lámina" />
+							</f:facet>
+							<center>
+								<h:outputText value="#{repetidas.numberSheets}" />
+							</center>
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Cantidad" />
+							</f:facet>
+							<center>
+								<h:outputText value="#{repetidas.countSheets}" />
+							</center>
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+				<p:tab title="NOTICIAS">
+
+					<p:dataTable id="news" var="noticias"
+						value="#{userBean.listarNoticias}" paginator="true" rows="2"
+						style="margin-bottom:20px">
+						<p:column>
+							<center>
+								<p:graphicImage url="/img/news.png" width="120" height="120" />
+							</center>
+						</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Noticia" />
+							</f:facet>
+							<center>
+								<p:outputLabel value="Título:  " style="font-weight: bold" />
+								<h:outputLabel value="#{noticias.shortDescription}" />
+								<br /> <br />
+								<p:outputLabel value="Cuerpo:  " style="font-weight: bold" />
+								<h:outputLabel value="#{noticias.largeDescription}" />
+							</center>
+						</p:column>
+
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="Fecha de publicación" />
+							</f:facet>
+							<center>
+								<h:outputText value="#{noticias.dateNews}" />
+							</center>
+						</p:column>
+
+					</p:dataTable>
+				</p:tab>
+				<p:tab title="ESTADIOS">
+
+					<p:accordionPanel value="#{userBean.listarEstadios}" var="estadio">
+						<p:tab title="Estadio - #{estadio.id}">
+							<h:panelGrid columns="2" cellpadding="5">
+								<h:outputText value="Ciudad:" style="font-weight: bold" />
+								<h:outputText value="#{estadio.city}" />
+
+								<h:outputText value="Capacidad:" style="font-weight: bold" />
+								<h:outputText value="#{estadio.capacity}" />
+
+								<h:outputText value="Temperatura en grados:" style="font-weight: bold" />
+								<h:outputText value="#{estadio.temperature}" />
+								
+								<h:outputText value="Población:" style="font-weight: bold" />
+								<h:outputText value="#{estadio.population}" />
+							</h:panelGrid>
+						</p:tab>
+					</p:accordionPanel>
+
+
+				</p:tab>
+				<p:tab title="AJUSTES">
+
+					<p:panelGrid columns="2">
+						<f:facet name="header">
+							<h:outputText value="Cambio de datos" />
+						</f:facet>
+						<p:outputLabel value="Usuario:" />
+						<p:inputText id="user" value="#{userBean.usuario.userName}"
+							maxlength="8" />
+						<p:outputLabel value="Nombre:" />
+						<p:inputText id="name" value="#{userBean.usuario.fullName}"
+							maxlength="60" />
+						<p:outputLabel value="Teléfono:" />
+						<p:inputText id="numbre" value="#{userBean.usuario.phoneNumber}"
+							maxlength="10" />
+						<p:outputLabel value="Email:" />
+						<p:inputText id="email" value="#{userBean.usuario.emailAddress}"
+							maxlength="75" />
+						<p:outputLabel value="Contraseña anterior:" />
+						<p:password id="lastPassword"
+							value="#{userBean.contrasenaAnterior}" maxlength="256" />
+						<p:outputLabel value="Contraseña nueva:" />
+						<p:password id="newPassword" value="#{userBean.contrasenaNueva}"
+							maxlength="256" />
+
+						<p:outputLabel value="Repita la Contraseña:" />
+						<p:password id="rNewPassword"
+							value="#{userBean.contrasenaNuevaRep}" maxlength="256" />
+					</p:panelGrid>
+					<br />
+					<p:commandButton value="Guardar" action="#{userBean.actualizar}" />
+
+
+				</p:tab>
+			</p:tabView>
+		</center>
+	</h:form>
+
+</h:body>
+</html>

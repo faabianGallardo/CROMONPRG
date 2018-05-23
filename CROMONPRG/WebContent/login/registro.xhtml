@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>REGRISTRO</title>
+</h:head>
+<h:body style="background-color: mintcream">
+	<center>
+	<h:form>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<p:graphicImage url="/img/registro.png"/>
+	<br/>
+	<br/>
+	<br/>
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Usuario:" />
+			<p:inputText id="user" value="#{userBean.usuario.userName}" maxlength="8"/>
+			<p:outputLabel value="Nombre:" />
+			<p:inputText id="name" value="#{userBean.usuario.fullName}" maxlength="60"/>
+			<p:outputLabel value="Teléfono:" />
+			<p:inputText id="numbre" value="#{userBean.usuario.phoneNumber}" maxlength="10"/>
+			<p:outputLabel value="Email:" />
+			<p:inputText id="email" value="#{userBean.usuario.emailAddress}" maxlength="75"/>
+		</p:panelGrid >
+		<br/>
+		<p:commandButton value="Registrar" action="#{userBean.adicionarUsuario}" />
+		<br/>
+		<br/>
+		<p:commandLink action="login" value="Regresar"/>
+
+	
+	</h:form>
+	</center>
+	
+</h:body>
+</html>
