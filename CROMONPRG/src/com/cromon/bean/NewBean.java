@@ -29,6 +29,7 @@ public class NewBean {
 	private User usuario;
 	private DataModel listaNoticias;
 	
+	
 	@PostConstruct
 	public void init() {
 		
