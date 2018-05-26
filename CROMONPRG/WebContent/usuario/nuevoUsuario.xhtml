@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Usuario Nuevo</title>
+</h:head>
+<h:body>
+	<center>
+		<h:form>
+			<br />
+			<br />
+			<br />
+			<br />
+			<p:graphicImage url="/img/cromon.png" />
+			<br />
+			<br />
+			<br />
+
+
+			<p:outputLabel value="Por favor cambie la contraseña:" />
+
+			<br />
+			<br />
+			<p:panelGrid id="panel" columns="2" style="text-align:center; ">
+				<p:outputLabel value="Contraseña Anterior:" />
+				<p:password id="anterior" value="#{userBean.contrasenaAnterior}" />
+
+				<p:outputLabel value="Contraseña Nueva:" />
+				<p:password id="nueva" value="#{userBean.contrasenaNueva}" />
+
+
+				<p:outputLabel value="Repita la nueva contraseña:" />
+				<p:password id="nuevaRep" value="#{userBean.contrasenaNuevaRep}" />
+
+			</p:panelGrid>
+			<br />
+			<h:inputHidden value="#{userBean.usuario.emailAddress}" />
+			<br />
+			<p:commandButton value="Actualizar"
+				action="#{userBean.actualizarTipoUsuario}" />
+			<br />
+			<br />
+		</h:form>
+	</center>
+</h:body>
+</html>

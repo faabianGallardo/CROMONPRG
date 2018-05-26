@@ -13,6 +13,15 @@ import java.util.List;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.primefaces.component.export.ExcelOptions;
+
 import com.cromon.entity.Audit;
 import com.cromon.entity.User;
 import com.itextpdf.text.Chunk;
@@ -25,6 +34,9 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 public class Export 
 {
+	
+	private ExcelOptions excelOpt;
+	
 	public static void GuardarUserPDF(List lista, String table)
 	{
 		Document documento = new Document();
@@ -186,5 +198,30 @@ public class Export
 		} catch (FileNotFoundException e) {e.printStackTrace();} catch (Exception e) {e.printStackTrace();}
 
 	}
+	
+	 public void postProcessXLS(Object document) {
+	        HSSFWorkbook wb = (HSSFWorkbook) document;
+	        HSSFSheet sheet = wb.getSheetAt(0);
+	        HSSFRow header = sheet.getRow(0);
+	         
+	        HSSFCellStyle cellStyle = wb.createCellStyle();  
+	        cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
+//	        cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+	         
+	        for(int i=0; i < header.getPhysicalNumberOfCells();i++) {
+	            HSSFCell cell = header.getCell(i);
+	             
+	            cell.setCellStyle(cellStyle);
+	        }
+	    }
 
+	public ExcelOptions getExcelOpt() {
+		return excelOpt;
+	}
+
+	public void setExcelOpt(ExcelOptions excelOpt) {
+		this.excelOpt = excelOpt;
+	}
+
+	
 }

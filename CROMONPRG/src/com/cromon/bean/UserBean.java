@@ -19,7 +19,14 @@ import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.primefaces.PrimeFaces;
+import org.primefaces.component.export.ExcelOptions;
 
 import com.cromon.dao.AuditDAO;
 import com.cromon.dao.MissingsheetDAO;
@@ -53,14 +60,13 @@ public class UserBean {
 	private DataModel listaNoticias;
 	private DataModel listaEstadios;
 	private int intentos;
-	
 	private String contrasenaAnterior;
 	private String contrasenaNueva;
 	private String contrasenaNuevaRep;
 	private Missingsheet faltante;
 	private Repeatedsheet repetida;
 	private Stadium estadio;
-
+	private ExcelOptions excelOpt;
 
 	@PostConstruct
 	public void init()
@@ -73,6 +79,7 @@ public class UserBean {
 		contrasenaNueva="";
 		contrasenaNuevaRep="";
 		estadio = new Stadium();
+		customizationOptions();
 	}
 
 
@@ -198,6 +205,7 @@ public class UserBean {
 				usuario.setDateLastPassword(new Timestamp(Calendar.getInstance().getTime().getTime()));
 				usuario.setUserType("Usuario");
 				usuario.setIpAddress(remoteAddr);
+				usuario.setTipoUsuario("Nuevo");
 				dao.save(usuario);
 
 				Audit audi = new Audit();
@@ -266,8 +274,7 @@ public class UserBean {
 		User user = dao.getUserEmail(usuario.getEmailAddress());
 
 		if(user.getUserType().equals("Usuario")) {
-			if(usuario.getUserName().equals("") || usuario.getFullName().equals("") || usuario.getPhoneNumber().equals("") || usuario.getEmailAddress().equals("") 
-					|| contrasenaAnterior.equals("") || contrasenaNueva.equals("") || contrasenaNuevaRep.equals(""))
+			if(usuario.getUserName().equals("") || usuario.getFullName().equals("") || usuario.getEmailAddress().equals(""))
 			{
 				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Campos requeridos","Llene todos los campos por favor.");
 				PrimeFaces.current().dialog().showMessageDynamic(message);
@@ -275,47 +282,73 @@ public class UserBean {
 			}
 			else
 			{
-				user.setUserName(usuario.getUserName());
-				user.setFullName(usuario.getFullName());
-				user.setPhoneNumber(usuario.getPhoneNumber());
-				user.setEmailAddress(usuario.getEmailAddress());
-				dao.update(user);
-
-
-				Audit audi = new Audit();
-				audi.setUserId(user.getId());
-				audi.setOperation("UpdateData");
-				audi.setTableName("User");
-				audi.setTableId(user.getId());
-				audi.setCreateDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-				AuditDAO daoAudi = new AuditDAOImpl();
-				daoAudi.save(audi);
-
-				String pass=RandomPassword.getStringMessageDigest(contrasenaAnterior, RandomPassword.MD5);
-				RandomPassword r = new RandomPassword();
-
-				if(user.getPassword().equals(pass))
+				if(contrasenaAnterior.equalsIgnoreCase(""))
 				{
-					if(contrasenaNueva.equals(contrasenaNuevaRep))
-					{
-						String s = r.getStringMessageDigest(contrasenaNueva, r.MD5);
-						user.setPassword(s);
-						user.setDateLastPassword(new Timestamp(Calendar.getInstance().getTime().getTime()));
-						dao.update(user);
+					user.setUserName(usuario.getUserName());
+					user.setFullName(usuario.getFullName());
+					user.setPhoneNumber(usuario.getPhoneNumber());
+					user.setEmailAddress(usuario.getEmailAddress());
+					dao.update(user);
 
-						FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "","Actualización exitosa.");
-						PrimeFaces.current().dialog().showMessageDynamic(message);
-					}
-					else
-					{
-						FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Error","Las contraseñas no coinciden.");
-						PrimeFaces.current().dialog().showMessageDynamic(message);
-					}
+
+					Audit audi = new Audit();
+					audi.setUserId(user.getId());
+					audi.setOperation("UpdateData");
+					audi.setTableName("User");
+					audi.setTableId(user.getId());
+					audi.setCreateDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+					AuditDAO daoAudi = new AuditDAOImpl();
+					daoAudi.save(audi);
+
+					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "","Actualización exitosa.");
+					PrimeFaces.current().dialog().showMessageDynamic(message);
+
+					pagina = "/usuario/inicioUser";
 				}
 				else
 				{
-					FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Contraseña incorrecta","La contraseña anterior no coincide con la registrada.");
-					PrimeFaces.current().dialog().showMessageDynamic(message);
+					user.setUserName(usuario.getUserName());
+					user.setFullName(usuario.getFullName());
+					user.setPhoneNumber(usuario.getPhoneNumber());
+					user.setEmailAddress(usuario.getEmailAddress());
+					dao.update(user);
+
+
+					Audit audi = new Audit();
+					audi.setUserId(user.getId());
+					audi.setOperation("UpdateData");
+					audi.setTableName("User");
+					audi.setTableId(user.getId());
+					audi.setCreateDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+					AuditDAO daoAudi = new AuditDAOImpl();
+					daoAudi.save(audi);
+
+					String pass=RandomPassword.getStringMessageDigest(contrasenaAnterior, RandomPassword.MD5);
+					RandomPassword r = new RandomPassword();
+
+					if(user.getPassword().equals(pass))
+					{
+						if(contrasenaNueva.equals(contrasenaNuevaRep))
+						{
+							String s = r.getStringMessageDigest(contrasenaNueva, r.MD5);
+							user.setPassword(s);
+							user.setDateLastPassword(new Timestamp(Calendar.getInstance().getTime().getTime()));
+							dao.update(user);
+
+							FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "","Actualización exitosa.");
+							PrimeFaces.current().dialog().showMessageDynamic(message);
+						}
+						else
+						{
+							FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Error","Las nuevas contraseñas no coinciden.");
+							PrimeFaces.current().dialog().showMessageDynamic(message);
+						}
+					}
+					else
+					{
+						FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Contraseña incorrecta","La contraseña anterior no coincide con la registrada.");
+						PrimeFaces.current().dialog().showMessageDynamic(message);
+					}
 				}
 			}
 
@@ -381,6 +414,43 @@ public class UserBean {
 		return pagina;
 	}
 
+	public String actualizarTipoUsuario()
+	{
+		String pagina = "";
+		UserDAO dao = new UserDAOImpl();
+		User user = dao.getUserEmail(usuario.getEmailAddress());
+
+		String pass=RandomPassword.getStringMessageDigest(contrasenaAnterior, RandomPassword.MD5);
+		RandomPassword r = new RandomPassword();
+
+		if(user.getPassword().equals(pass))
+		{
+			if(contrasenaNueva.equals(contrasenaNuevaRep))
+			{
+				String s = r.getStringMessageDigest(contrasenaNueva, r.MD5);
+				user.setPassword(s);
+				user.setDateLastPassword(new Timestamp(Calendar.getInstance().getTime().getTime()));
+				user.setTipoUsuario("Antiguo");
+				dao.update(user);
+
+				pagina = "/login/login";
+			}
+			else
+			{
+				FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Error","Las nuevas contraseñas no coinciden.");
+				PrimeFaces.current().dialog().showMessageDynamic(message);
+
+				pagina="/usuario/nuevoUsuario";
+			}
+		}
+		else
+		{
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Contraseña incorrecta","La contraseña anterior no coincide con la registrada.");
+			PrimeFaces.current().dialog().showMessageDynamic(message);
+		}
+
+		return pagina;
+	}
 
 	public User getUsuario() {
 		return usuario;
@@ -407,18 +477,18 @@ public class UserBean {
 		listaRepetidas = new ListDataModel(lista);
 		return listaRepetidas;
 	}
-	
+
 	public DataModel getListarNoticias() {
 		List<New> lista = new NewDAOImpl().list();
 		listaNoticias = new ListDataModel(lista);
 		return listaNoticias;
 	}
-	
+
 	public DataModel getListarEstadios() {
 		List<Stadium> lista = new StadiumDAOImpl().list();
 		listaEstadios = new ListDataModel(lista);
 		return listaEstadios;
-		
+
 	}
 
 
@@ -449,6 +519,9 @@ public class UserBean {
 						AuditDAO daoAudi = new AuditDAOImpl();
 						String remoteAddr = ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRemoteAddr();
 						user.setIpAddress(remoteAddr);
+						usuario.setUserName(user.getUserName());
+						usuario.setFullName(user.getFullName());
+						usuario.setPhoneNumber(user.getPhoneNumber());
 						dao.update(user);
 						daoAudi.save(audi);
 						pagina = "/admin/inicioAdmin";
@@ -464,19 +537,30 @@ public class UserBean {
 					if(user.getContador() != 3)
 					{
 						if(pass.equals(user.getPassword())) {
-							Audit audi = new Audit();
-							audi.setUserId(user.getId());
-							audi.setOperation("loginUSER");
-							audi.setTableName("User");
-							audi.setTableId(0);
-							audi.setCreateDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
-							AuditDAO daoAudi = new AuditDAOImpl();
-							String remoteAddr = ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRemoteAddr();
-							user.setIpAddress(remoteAddr);
-							user.setContador(0);
-							dao.update(user);
-							daoAudi.save(audi);
-							pagina = "/usuario/inicioUser"; 
+							if(user.getTipoUsuario().equalsIgnoreCase("Antiguo"))
+							{
+								Audit audi = new Audit();
+								audi.setUserId(user.getId());
+								audi.setOperation("loginUSER");
+								audi.setTableName("User");
+								audi.setTableId(0);
+								audi.setCreateDate(new Timestamp(Calendar.getInstance().getTime().getTime()));
+								AuditDAO daoAudi = new AuditDAOImpl();
+								String remoteAddr = ((HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRemoteAddr();
+								user.setIpAddress(remoteAddr);
+								user.setContador(0);
+								dao.update(user);
+								usuario.setUserName(user.getUserName());
+								usuario.setFullName(user.getFullName());
+								usuario.setPhoneNumber(user.getPhoneNumber());
+								daoAudi.save(audi);
+
+								pagina = "/usuario/inicioUser"; 
+							}
+							else
+							{
+								pagina = "/usuario/nuevoUsuario";
+							}
 						}
 						else
 						{
@@ -547,6 +631,7 @@ public class UserBean {
 			Integer a = new Integer((int) ((Math.random()*10000)+1));
 			String s = r.getStringMessageDigest(a.toString(), r.MD5);
 			user.setPassword(s);
+			user.setTipoUsuario("Nuevo");
 			email.enviarPass(usuario.getEmailAddress(),user.getUserName(), a.toString());
 			dao.update(user);
 			Audit audi = new Audit();
@@ -610,40 +695,62 @@ public class UserBean {
 		return "entro";
 	}
 
+	public void customizationOptions() {
+		excelOpt = new ExcelOptions();
+		excelOpt.setFacetBgColor("#F88017");
+		excelOpt.setFacetFontSize("10");
+		excelOpt.setFacetFontColor("#0000ff");
+		excelOpt.setFacetFontStyle("BOLD");
+		excelOpt.setCellFontColor("#00ff00");
+		excelOpt.setCellFontSize("8");
 
+	}
+
+	public void postProcessXLS(Object document) {
+		HSSFWorkbook wb = (HSSFWorkbook) document;
+		HSSFSheet sheet = wb.getSheetAt(0);
+		HSSFRow header = sheet.getRow(0);
+
+		HSSFCellStyle cellStyle = wb.createCellStyle();  
+		cellStyle.setFillForegroundColor(HSSFColor.GREEN.index);
+		//	        cellStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+
+		for(int i=0; i < (header.getPhysicalNumberOfCells()-1) ;i++) {
+			HSSFCell cell = header.getCell(i);
+
+			cell.setCellStyle(cellStyle);
+		}
+	}
+
+	public ExcelOptions getExcelOpt() {
+		return excelOpt;
+	}
+
+	public void setExcelOpt(ExcelOptions excelOpt) {
+		this.excelOpt = excelOpt;
+	}
 
 	public Missingsheet getFaltante() {
 		return faltante;
 	}
 
-
-
 	public void setFaltante(Missingsheet faltante) {
 		this.faltante = faltante;
 	}
-
-
 
 	public Repeatedsheet getRepetida() {
 		return repetida;
 	}
 
-
-
 	public void setRepetida(Repeatedsheet repetida) {
 		this.repetida = repetida;
 	}
-
 
 	public Stadium getEstadio() {
 		return estadio;
 	}
 
-
 	public void setEstadio(Stadium estadio) {
 		this.estadio = estadio;
 	}
-
-
-
 }

@@ -40,6 +40,12 @@
 					<h:commandLink action="#{userBean.exportarUserPDF}">
 						<p:graphicImage url="/img/pdf.png" width="32" />
 					</h:commandLink>
+
+					<h:commandLink id="excel">
+						<p:graphicImage  url="/img/excel.png" width="32"  />
+						<p:dataExporter type="xls" target="users" fileName="Usuarios"
+							postProcessor="#{userBean.postProcessXLS}" />
+					</h:commandLink>
 					<p:dataTable id="users" var="user"
 						value="#{userBean.listarUsuarios}" paginator="true" rows="6"
 						style="margin-bottom:20px">
@@ -215,54 +221,38 @@
 
 				</p:tab>
 				<p:tab title="AJUSTES">
-					<p:tabView>
-						<p:tab title="Mis Datos">
-							<p:panelGrid columns="2">
-								<f:facet name="header">
-									<h:outputText value="Cambio de datos" />
-								</f:facet>
-								<p:outputLabel value="Usuario:" />
-								<p:inputText id="user" value="#{userBean.usuario.userName}"
-									maxlength="8" />
-								<p:outputLabel value="Nombre:" />
-								<p:inputText id="name" value="#{userBean.usuario.fullName}"
-									maxlength="60" />
-								<p:outputLabel value="Teléfono:" />
-								<p:inputText id="numbre" value="#{userBean.usuario.phoneNumber}"
-									maxlength="10" />
-								<p:outputLabel value="Email:" />
-								<p:inputText id="email" value="#{userBean.usuario.emailAddress}"
-									maxlength="75" />
-							</p:panelGrid>
-							<br />
-							<p:commandButton value="Guardar"
-								action="#{userBean.actualizarDatos}" />
-							<br />
-						</p:tab>
-						<p:tab title="Ajustes de Contraseña">
 
-							<p:panelGrid columns="2">
-								<f:facet name="header">
-									<h:outputText value="Cambio de contraseña" />
-								</f:facet>
-								<p:outputLabel value="Contraseña anterior:" />
-								<p:password id="lastPassword"
-									value="#{userBean.contrasenaAnterior}" maxlength="256" />
-								<p:outputLabel value="Contraseña nueva:" />
-								<p:password id="newPassword" value="#{userBean.contrasenaNueva}"
-									maxlength="256" />
+					<p:panelGrid columns="2">
+						<f:facet name="header">
+							<h:outputText value="Cambio de datos" />
+						</f:facet>
+						<p:outputLabel value="Usuario:" />
+						<p:inputText id="user" value="#{userBean.usuario.userName}"
+							maxlength="8" />
+						<p:outputLabel value="Nombre:" />
+						<p:inputText id="name" value="#{userBean.usuario.fullName}"
+							maxlength="60" />
+						<p:outputLabel value="Teléfono:" />
+						<p:inputText id="numbre" value="#{userBean.usuario.phoneNumber}"
+							maxlength="10" />
+						<p:outputLabel value="Email:" />
+						<p:inputText id="email" value="#{userBean.usuario.emailAddress}"
+							maxlength="75" />
+						<p:outputLabel value="Contraseña anterior:" />
+						<p:password id="lastPassword"
+							value="#{userBean.contrasenaAnterior}" maxlength="256" />
+						<p:outputLabel value="Contraseña nueva:" />
+						<p:password id="newPassword" value="#{userBean.contrasenaNueva}"
+							maxlength="256" />
 
-								<p:outputLabel value="Repita la Contraseña:" />
-								<p:password id="rNewPassword"
-									value="#{userBean.contrasenaNuevaRep}" maxlength="256" />
-							</p:panelGrid>
-							<br />
-							<p:commandButton value="Guardar"
-								action="#{userBean.actualizarContrasena}" />
-							<br />
-							<h:inputHidden value="#{userBean.usuario.emailAddress}" />
-						</p:tab>
-					</p:tabView>
+						<p:outputLabel value="Repita la Contraseña:" />
+						<p:password id="rNewPassword"
+							value="#{userBean.contrasenaNuevaRep}" maxlength="256" />
+					</p:panelGrid>
+					<br />
+					<p:commandButton value="Guardar" action="#{userBean.actualizar}" />
+
+
 				</p:tab>
 			</p:tabView>
 		</center>

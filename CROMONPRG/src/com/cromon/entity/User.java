@@ -28,6 +28,7 @@ public class User implements Serializable {
 	private String userType;
 	private String ipAddress;
 	private  int contador;
+	private String tipoUsuario;
 
 	public User() {
 	}
@@ -121,6 +122,16 @@ public class User implements Serializable {
 	}
 	public void setContador(int contador) {
 		this.contador = contador;
+	}
+
+	@Column(name="tipoUsuario", length=50)
+	public String getTipoUsuario() {
+		return tipoUsuario;
+	}
+
+
+	public void setTipoUsuario(String tipoUsuario) {
+		this.tipoUsuario = tipoUsuario;
 	}
 
 }
